@@ -1,6 +1,7 @@
 """Course Model Definition."""
 from ic_parent_api.base import DataModel
 from ic_parent_api.models.placement import Placement
+from ic_parent_api.models.gradingtask import GradingTask
 from ic_parent_api.ic_api_client import CourseResponse
 from typing import Optional
 
@@ -28,6 +29,7 @@ class Course(DataModel):
         self._teacherdisplay = course_resp.teacherDisplay
         self._hidestandardsonportal = course_resp.hideStandardsOnPortal
         self._sectionplacements = course_resp.sectionPlacements
+        self._gradingtasks = course_resp.gradingTasks
 
     @property
     def id(self) -> str:
@@ -118,3 +120,8 @@ class Course(DataModel):
     def sectionplacements(self) -> list[Placement]:
         """Property Definition."""
         return [Placement(placement) for placement in self._sectionplacements]
+
+    @property
+    def gradingtasks(self) -> list[GradingTask]:
+        """Property Definition."""
+        return [GradingTask(gradingtask) for gradingtask in self._gradingtasks]

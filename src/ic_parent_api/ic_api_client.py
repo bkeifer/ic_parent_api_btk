@@ -4,14 +4,17 @@ import logging
 from urllib.parse import urljoin
 
 import aiohttp
+from pprint import PrettyPrinter
 
 from .errors import InfiniteCampusError
 from .models.base import StudentResponse, CourseResponse, \
-    AssignmentResponse, TermResponse, ScheduleDayResponse
+    AssignmentResponse, TermResponse, ScheduleDayResponse, \
+    GradeResponse, GradingTaskResponse
 
 _LOGGER = logging.getLogger(__name__)
 _LOGGER.setLevel(logging.INFO)
 
+pp = PrettyPrinter(indent=4)
 
 def _enable_debug_logging():
     _LOGGER.setLevel(logging.DEBUG)
@@ -69,6 +72,7 @@ class InfiniteCampusApiClient():
                     response = resp
                     responsetext = await resp.text()
                     response_json = await resp.json()
+                    # pp.pprint(response_json)
                     if response.status >= 400:
                         raise InfiniteCampusError(response.status, responsetext)
                     return response_json
@@ -95,6 +99,24 @@ class InfiniteCampusApiClient():
             return [CourseResponse(**resp) for resp in parsed_response]
         return []
 
+    async def get_grades(self, student_id: int) -> list[GradeResponse]:
+        """Get Infinite Campus Grades."""
+        parsed_response = await self._get_request(f"/campus/resources/portal/grades?&personID={student_id}")
+        courselist: list[CourseResponse] = []
+        tasklist: list[GradingTaskResponse] = []
+        if parsed_response:
+            # pp.pprint(parsed_response)
+            graderesp: list[GradeResponse] = [GradeResponse(**resp) for resp in parsed_response]
+            # for grade in graderesp:
+            #     for course in grade.courses:
+            #         individualCourse: [CourseResponse] = course
+            #         courselist.extend(individualCourse)
+            #         for gtask in course.gradingTasks:
+            #             tasklist.extend(gtask)
+            return graderesp
+            # return parsed_response
+        return []
+    
     async def get_assignments(self, student_id: int) -> list[AssignmentResponse]:
         """Get Infinite Campus Courses."""
         parsed_response = await self._get_request(

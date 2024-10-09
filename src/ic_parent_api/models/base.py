@@ -110,6 +110,19 @@ class PlacementResponse(BaseModel):
     isResponsive: bool
 
 
+class GradingTaskResponse(BaseModel):
+    """GradingTask Response Definition."""
+    id: str = Field(alias='_id')
+    personID: int
+    courseID: int
+    courseName: str
+    progressScore: Optional[str] = None
+    progressPercent: Optional[float] = None
+    progressPointsEarned: Optional[float] = None
+    progressTotalPoints: Optional[float] = None
+    termName: str
+    
+
 class CourseResponse(BaseModel):
     """Course Response Definition."""
     class Config:
@@ -134,6 +147,7 @@ class CourseResponse(BaseModel):
     teacherDisplay: Optional[str] = None
     hideStandardsOnPortal: bool
     sectionPlacements: list[PlacementResponse]
+    gradingTasks: list[GradingTaskResponse]
 
 
 class AssignmentResponse(BaseModel):
@@ -185,3 +199,31 @@ class AssignmentResponse(BaseModel):
     isValidRubric: Optional[bool] = None
     isValidMark: Optional[bool] = None
     includeCampusLearning: Optional[bool] = None
+
+
+class GradeResponse(BaseModel):
+    """Grade Response Definition."""
+    calendarID: Optional[int] = None
+    courseID: Optional[int] = None
+    courseName: Optional[str] = None
+    courseNumber: Optional[int] = None
+    courses: list[CourseResponse]
+    endYear: Optional[int] = None
+    hideStandardsOnPortal: Optional[bool] = None
+    id: Optional[int] = None
+    isResponsive: Optional[bool] = None
+    personID: Optional[int] = None
+    roomName: Optional[str] = None
+    rosterID: Optional[int] = None
+    schoolID: int
+    schoolName: Optional[str] = None
+    sectionID: Optional[int] = None
+    sectionNumber: Optional[int] = None
+    sectionPlacements: Optional[list] = None
+    structureID: int
+    teacherDisplay: Optional[str] = None
+    # terms: Optional[list[TermResponse]] = None
+    trialActive: Optional[bool] = None
+    trialID: Optional[int] = None
+
+

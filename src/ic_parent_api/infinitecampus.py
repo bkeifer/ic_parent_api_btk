@@ -5,6 +5,7 @@ from .models.student import Student
 from .models.course import Course
 from .models.assignment import Assignment
 from .models.term import Term
+from .models.grade import Grade
 from .ic_api_client import InfiniteCampusApiClient
 
 _LOGGER = logging.getLogger(__name__)
@@ -55,3 +56,9 @@ class InfiniteCampus():
         termsresp = await self._api_client.get_terms()
         terms = [Term(response) for response in termsresp]
         return terms
+
+    async def grades(self, student_id) -> list[Grade]:
+        """Get Grades: must supply student id."""
+        gradesresp = await self._api_client.get_grades(student_id)
+        grades = [Grade(response) for response in gradesresp]
+        return grades
